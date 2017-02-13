@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block header %}
+    <div class="page-header">
+        <a href="" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+        <h1><a href="/">Rede Baysiana:</a> {{ context.baysianet.title }}</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h2>Competência: {{ context.title }}</h2>
+    <h3>Nova Variável</h3>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Guardar</button>
+    </form>
+{% endblock %}

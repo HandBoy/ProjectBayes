@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block header %}
+    <div class="page-header">
+        <a href="" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+        <h1><a href="/">Rede Baysiana:</a> {{ baysianet.title }}</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h1>Nova Competencia</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+
+        {% if hierarchy_list %}
+            <h2>Adicionar Hieraquia</h2>
+            <select name="father" multiple="multiple">
+            {% for h in hierarchy_list %}
+                <option value="{{ h.pk }}">{{ h }}</option>
+            {% endfor %}
+            </select>
+        {% endif %}
+
+        <button type="submit" class="save btn btn-default">Guardar</button>
+    </form>
+{% endblock %}

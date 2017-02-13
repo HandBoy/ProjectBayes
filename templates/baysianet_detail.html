@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <div class="page-header">
+        <a href="" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+        <h1><a href="/">Rede Baysiana</a></h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="post">
+
+        <h1>{{ baysianet.title }}</h1>
+        <div class="date">
+            <a class="btn btn-default" href="{% url 'core.views.competence_new' baysianet_pk=baysianet.pk%}"><span class="glyphicon glyphicon-plus"></span></a>
+        </div>
+        <h2>Competências</h2>
+        <div class="post">
+            {% for competencia in baysianet.competency.all %}
+                <h3>
+                    <a href="{% url 'core.views.variable_new' competence_pk=competencia.pk%} " data-toggle="tooltip" title="Add Variable"><span class="glyphicon glyphicon-plus"></span></a>
+                    {{ competencia.title }} </h3>
+
+                    {% for competency in competencia.competencs.all %}
+                        <p>{{ competency.title }}</p>
+                    {% endfor %}
+                <hr/>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block list-group %}
+    <ul class="list-group">
+        <li class="list-group-item"><a href="{% url 'core.views.competence_new' baysianet.pk %}">Nova Competencia</a></li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+    </ul>
+{% endblock %}

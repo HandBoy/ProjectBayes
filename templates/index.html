@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block header %}
+    <div class="page-header">
+        <a href="{% url 'core.views.index' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+        <h1><a href="/">Redes Baysianas</a></h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% for net in nets %}
+        <div class="post">
+            <h2><a href="{% url 'core.views.baysianet_detail' pk=net.pk %}">{{ net.title }}</a></h2>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block list-group %}
+    <ul class="list-group">
+        <li class="list-group-item"><a href="{% url 'core.views.index' %}">Ver Redes</a></li>
+        <li class="list-group-item"><a href="{% url 'core.views.baysianet_new' %}">Nova Rede</a></li>
+        <li class="list-group-item">Vestibulum at eros</li>
+    </ul>
+{% endblock %}

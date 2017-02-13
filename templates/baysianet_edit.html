@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block header %}
+    <div class="page-header">
+        <a href="{% url 'core.views.baysianet_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+        <h1><a href="/">Matriz de Referência</a></h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h1>Nova Rede Baysiana</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Guardar</button>
+    </form>
+{% endblock %}

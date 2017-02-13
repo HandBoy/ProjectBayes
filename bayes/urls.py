@@ -1,0 +1,39 @@
+"""bayes URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/1.9/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+Including another URLconf
+    1. Add an import:  from blog import urls as blog_urls
+    2. Import the include() function: from django.conf.urls import url, include
+    3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
+"""
+from django.conf.urls import url, include
+from django.contrib import admin
+from core import views
+from rest_framework import routers
+from api.views import GameSessionViewSet
+
+router = routers.DefaultRouter()
+router.register(r'hierarchys', HierarchyViewSet)
+router.register(r'gamelog', LogSessionViewSet)
+router.register(r'sessions', GameSessionViewSet)
+router.register(r'finish_sessions', FinishSessionViewSet, base_name='finish_sessions')
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^$', view=views.index),
+    url(r'^baysianet/new/$', views.baysianet_new, name='baysianet_new'),
+    url(r'^baysianet/(?P<pk>[0-9]+)/$', views.baysianet_detail),
+    url(r'^competence/new/(?P<baysianet_pk>[0-9]+)$', views.competence_new),
+    url(r'^competence/variable/new/(?P<competence_pk>[0-9]+)$', views.variable_new),
+    url(r'^competence/(?P<pk>[0-9]+)/$', views.competence_detail),
+    url(r'^api/', include(router.urls)),
+]
+]
