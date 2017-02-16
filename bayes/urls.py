@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^competence/(?P<pk>[0-9]+)/$', views.competence_detail),
     url(r'^api/', include(router.urls)),
     url('^accounts/', include('django.contrib.auth.urls')),
+    url(r'^register/$', views.register),
 ]

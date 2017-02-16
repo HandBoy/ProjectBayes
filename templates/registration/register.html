@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block header %}
+    <div class="page-header">
+        <a href="" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+        <h1><a href="/">Novo Usuário</a></h1>
+    </div>
+{% endblock %}
+
+{% block title %}User Registration{% endblock %}
+{% block head %}User Registration{% endblock %}
+{% block content %}
+    <form method="post" action=".">
+        {{ form.as_p }}
+        <input type="submit" value="register" />
+        {% csrf_token %}
+    </form>
+{% endblock %}

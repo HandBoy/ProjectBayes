@@ -1,7 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
+from django.template import RequestContext
+
 from core.models import BaysianNet, Competence, Hierarchy, HierarchyFather
-from core.forms import BaysianForm, CompetenceForm, VariableForm
+from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -70,7 +74,7 @@ def competence_new(request, baysianet_pk=None):
 
 def variable_detail(request, competency_pk=None):
     context = {}
-    competence = get_object_or_404(Competence, pk=pk)
+    competence = get_object_or_404(Competence, pk=competency_pk)
     context['competence'] = competence
     return render(request, 'competence_detail.html', context)
 
@@ -87,3 +91,16 @@ def variable_new(request, competency_pk=None):
         form = VariableForm()
 
     return render(request, 'variable_new.html', {'form': form, 'context': comp})
+
+
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(username=form.cleaned_data['username'],
+                                            password=form.cleaned_data['password1'],
+                                            email=form.cleaned_data['email'])
+            return HttpResponseRedirect('/')
+    form = RegistrationForm()
+    variables = RequestContext(request, {'form': form})
+    return render_to_response('registration/register.html',variables)
