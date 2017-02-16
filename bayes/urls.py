@@ -22,7 +22,7 @@ from api.views import BaysianNetViewSet, LogSessionViewSet
 
 router = routers.DefaultRouter()
 router.register(r'nets', BaysianNetViewSet)
-router.register(r'logs', BaysianNetViewSet, LogSessionViewSet)
+router.register(r'logs', LogSessionViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -35,4 +35,7 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^register/$', views.register),
+    url(r'^games/$', view=views.games),
+    url(r'^games/play/(?P<game_pk>[0-9]+)$', views.play),
+
 ]

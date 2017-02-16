@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext
 
-from core.models import BaysianNet, Competence, Hierarchy, HierarchyFather
+from core.models import BaysianNet, Competence, Hierarchy, HierarchyFather, Game
 from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -104,3 +104,14 @@ def register(request):
     form = RegistrationForm()
     variables = RequestContext(request, {'form': form})
     return render_to_response('registration/register.html',variables)
+
+
+def games(request):
+    context = {}
+    context['games'] = Game.objects.all()
+    return render(request, 'game/index.html', context)
+
+def play(request):
+    context = {}
+    context['games'] = Game.objects.all()
+    return render(request, 'game/index.html', context)

@@ -71,7 +71,7 @@ class LogSession(models.Model):
     user = models.ForeignKey('auth.User', related_name='log_session')                       # user id  que starded the session
     game = models.ForeignKey('Game')                            # Game id
     expected = models.IntegerField(verbose_name='Resultado esperado', null=True, blank=True)
-    result = models.IntegerField(verbose_name='Resultado Alcançado')
+    result = models.IntegerField(verbose_name='Resultado Alcançado', null=True, blank=True)
     score = models.IntegerField(verbose_name='Pontuação', null=True, blank=True)
     data = models.CharField(max_length=10, verbose_name='data', null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
