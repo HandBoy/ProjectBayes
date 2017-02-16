@@ -18,13 +18,11 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from core import views
 from rest_framework import routers
-from api.views import GameSessionViewSet
+from api.views import BaysianNetViewSet, LogSessionViewSet
 
 router = routers.DefaultRouter()
-router.register(r'hierarchys', HierarchyViewSet)
-router.register(r'gamelog', LogSessionViewSet)
-router.register(r'sessions', GameSessionViewSet)
-router.register(r'finish_sessions', FinishSessionViewSet, base_name='finish_sessions')
+router.register(r'nets', BaysianNetViewSet)
+router.register(r'logs', BaysianNetViewSet, LogSessionViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -35,5 +33,4 @@ urlpatterns = [
     url(r'^competence/variable/new/(?P<competence_pk>[0-9]+)$', views.variable_new),
     url(r'^competence/(?P<pk>[0-9]+)/$', views.competence_detail),
     url(r'^api/', include(router.urls)),
-]
 ]

@@ -62,11 +62,16 @@ class Game(models.Model):
 
 
 class LogSession(models.Model):
-    type_log = models.BooleanField(default=True)                # was a 0 hit or 1 miss
-    user = models.ForeignKey('auth.User', related_name='game_session')                       # user id  que starded the session
+    type_log  = (
+        ('inicio', '1'),
+        ('fim', '2'),
+        ('acerto', '3'),
+        ('erro', '4')
+    )               # was a 0 hit or 1 miss
+    user = models.ForeignKey('auth.User', related_name='log_session')                       # user id  que starded the session
     game = models.ForeignKey('Game')                            # Game id
-    expected = models.IntegerField(verbose_name='Resultado esperado')
+    expected = models.IntegerField(verbose_name='Resultado esperado', null=True, blank=True)
     result = models.IntegerField(verbose_name='Resultado Alcançado')
-    score = models.IntegerField(verbose_name='Resultado Final')
+    score = models.IntegerField(verbose_name='Pontuação', null=True, blank=True)
     data = models.CharField(max_length=10, verbose_name='data', null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
