@@ -14,6 +14,7 @@ def index(request):
     return render(request, 'index.html', context)
 
 
+
 def baysianet_new(request):
     if request.method == "POST":
         form = BaysianForm(request.POST)
