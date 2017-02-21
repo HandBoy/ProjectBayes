@@ -111,7 +111,15 @@ def games(request):
     context['games'] = Game.objects.all()
     return render(request, 'game/index.html', context)
 
+
 def play(request):
     context = {}
     context['games'] = Game.objects.all()
     return render(request, 'game/index.html', context)
+
+
+def relatorios(request, game_pk=None):
+    game = get_object_or_404(Game, pk=game_pk)
+    context = {}
+    context['game'] = game;
+    return render(request, 'relatorios/index.html', context)

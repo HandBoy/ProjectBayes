@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <div class="page-header">
+        <div class="top-menu">
+            {% if user.is_authenticated %}
+                User: {{ user.get_username }}
+                <a href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+            {% else %}
+                <a href="{% url 'login'%}?next={{request.path}}">Login</a>
+            {% endif %}
+        </div>
+        <h1><a href="/">Relatórios</a></h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+
+    </div>
+{% endblock %}
+
+
+{% block list-group %}
+    <ul class="list-group">
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+    </ul>
+{% endblock %}
