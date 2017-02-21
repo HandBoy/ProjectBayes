@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext
 
-from core.models import BaysianNet, Competence, Hierarchy, HierarchyFather, Game
+from core.models import BaysianNet, Competence, LogSession, Game
 from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -119,7 +119,24 @@ def play(request):
 
 
 def relatorios(request, game_pk=None):
-    game = get_object_or_404(Game, pk=game_pk)
     context = {}
-    context['game'] = game;
+    users = User.objects.all()
+    user_dic_data = {}
+
+    for user in users:
+        correct = 0
+        wrong = 0
+        for log in user.log_session.filter(game_id=game_pk):
+            if log.type_log.value == 3:
+                correct+=1
+            elif log.type_log.value == 4:
+                wrong+=1
+
+            #correct += log.objects.filter(type_log=3).count()
+            #wrong   += log.objects.filter(type_log=4).count()
+            #print(correct)
+
+        user_dic_data[user.username] = {'accept': correct, 'wrong': wrong}
+
+    context['user_dic_data'] = user_dic_data
     return render(request, 'relatorios/index.html', context)

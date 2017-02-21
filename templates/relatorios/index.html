@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block header %}
     <div class="page-header">
@@ -17,6 +18,48 @@
 {% block content %}
     <div class="row">
 
+        <div id="chartBar" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+        <table id="datatable">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Correct</th>
+                <th>Wrong</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for key, value in user_dic_data.items %}
+                <tr>
+                    <th>{{ key }}</th>
+                    <td>{{ value.accept }}</td>
+                    <td>{{ value.wrong }}</td>
+                </tr>
+
+            {% endfor %}
+
+            <tr>
+                <th>Jill</th>
+                <td>34</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <th>Eva</th>
+                <td>12</td>
+                <td>16</td>
+            </tr>
+            <tr>
+                <th>Jackson</th>
+                <td>5</td>
+                <td>11</td>
+            </tr>
+            <tr>
+                <th>Bill</th>
+                <td>5</td>
+                <td>11</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 {% endblock %}
 
@@ -29,3 +72,68 @@
         <li class="list-group-item">Vestibulum at eros</li>
     </ul>
 {% endblock %}
+
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js/charts/highcharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/charts/data.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/charts/exporting.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#chartBar').highcharts({
+            data: {
+                table: 'datatable'
+            },
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Correct/Incorrect Answers '
+            },
+            yAxis: {
+                allowDecimals: true,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Jogadas',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 80,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                shadow: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                        this.point.y + ' ' + this.point.name.toLowerCase();
+                }
+            }
+        });
+    });
+
+    </script>
+
+{% endblock %}
+
+

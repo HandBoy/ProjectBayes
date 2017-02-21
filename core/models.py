@@ -68,7 +68,7 @@ class LogSession(models.Model):
         ('acerto', '3'),
         ('erro', '4')
     )               # was a 0 hit or 1 miss
-    user = models.ForeignKey('auth.User', related_name='log_session')                       # user id  que starded the session
+    user = models.ForeignKey('auth.User', related_name='log_session') # user id  que starded the session
     game = models.ForeignKey('Game')                            # Game id
     type_log = models.ForeignKey('TypeLogSession')                            # Game id
     expected = models.IntegerField(verbose_name='Resultado esperado', null=True, blank=True)
