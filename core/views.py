@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext
 
-from core.models import BaysianNet, Competence, LogSession, Game
+from core.models import BaysianNet, Competence, LogSession, Game, GameSession
 from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -124,14 +124,14 @@ def relatorios(request, game_pk=None):
     user_dic_data = {}
 
     for user in users:
-        correct = 0
-        wrong = 0
-        for log in user.log_session.filter(game_id=game_pk):
-            if log.type_log.value == 3:
-                correct += 1
-            elif log.type_log.value == 4:
-                wrong += 1
-        user_dic_data[user.username] = {'accept': correct, 'wrong': wrong}
+        total_correct = 0
+        total_wrongs = 0
+        for game_session in user.game_session.filter(game_id=1):
+            total_correct += game_session.log_session.filter(type_log=3).count()
+            total_wrongs   += game_session.log_session.filter(type_log=4).count()
+
+        if total_correct != 0:
+            user_dic_data[user.username] = {'accept': total_correct, 'wrong': total_wrongs, 'id': user.id}
 
     wrong_dic_data = {}
     logs = LogSession.objects.filter(game_id=game_pk).filter(type_log=4)
@@ -139,8 +139,9 @@ def relatorios(request, game_pk=None):
         if w.expected in wrong_dic_data:
             wrong_dic_data[w.expected]['value'] += 1
         else:
-             wrong_dic_data[w.expected] = {'value': 1}
+            wrong_dic_data[w.expected] = {'value': 1}
 
+    #gamesession = GameSession.objects.filter(game_id=game_pk).values('user_id').distinct()
     context['user_dic_data'] = user_dic_data
     context['wrong_dic_data'] = wrong_dic_data
     return render(request, 'relatorios/index.html', context)

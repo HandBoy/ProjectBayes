@@ -21,7 +21,7 @@
         <div id="chartBar" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
         <div id="chartPie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
 
-        <table id="datatable2" class="">
+        <table id="datatable2" class="invisible">
             <thead>
             <tr>
                 <th>Numero</th>
@@ -85,7 +85,11 @@
 
 
 {% block list-group %}
+    <p>Alunos</p>
     <ul class="list-group">
+        {% for key, value in user_dic_data.items %}
+            <li class="list-group-item"><a href="{% url 'baysianet_detail' pk=value.id %}">{{ key }}</a></li>
+        {% endfor %}
         <li class="list-group-item">Dapibus ac facilisis in</li>
         <li class="list-group-item">Morbi leo risus</li>
         <li class="list-group-item">Porta ac consectetur ac</li>
