@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from core.models import BaysianNet, LogSession
+from core.models import BaysianNet, LogSession, GameSession
+
 
 class BaysianNetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,7 +8,15 @@ class BaysianNetSerializer(serializers.ModelSerializer):
         fields = ('title', 'created_date')
 
 
-class LogSessinSerializer(serializers.ModelSerializer):
+class LogSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LogSession
-        fields = ('type_log', 'user', 'game', 'expected','result', 'score', 'data')
+        fields = ('type_log', 'user', 'game', 'expected', 'result', 'score', 'data')
+
+
+class GameSessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameSession
+        fields = ( 'game', 'user', 'goal', 'score', 'finish')
+
+
