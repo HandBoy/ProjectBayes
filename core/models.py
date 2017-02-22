@@ -71,9 +71,9 @@ class GameSession(models.Model):
 
 
 class LogSession(models.Model):
-    user = models.ForeignKey('auth.User', related_name='log_session') # user id  que starded the session
+    user = models.ForeignKey('auth.User', related_name='user_session') # user id  que starded the session
     game = models.ForeignKey('Game')                            # Game id
-    session = models.ForeignKey('GameSession')
+    session = models.ForeignKey('GameSession', related_name='log_session')
     type_log = models.ForeignKey('TypeLogSession')                            # Game id
     expected = models.IntegerField(verbose_name='Resultado esperado', null=True, blank=True)
     result = models.IntegerField(verbose_name='Resultado Alcançado', null=True, blank=True)
