@@ -138,5 +138,15 @@ def relatorios(request, game_pk=None):
 
         user_dic_data[user.username] = {'accept': correct, 'wrong': wrong}
 
+
+    wrong_dic_data = {}
+    logs = LogSession.objects.filter(game_id=game_pk).filter(type_log=4)
+    for w in logs:
+        if wrong_dic_data[w.expected] != 0 :
+            wrong_dic_data[w.expected] += 1
+        else:
+             wrong_dic_data[w.expected] = 0
+
     context['user_dic_data'] = user_dic_data
+    context['wrong_dic_data'] = wrong_dic_data
     return render(request, 'relatorios/index.html', context)
