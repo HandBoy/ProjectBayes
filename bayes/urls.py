@@ -36,7 +36,7 @@ urlpatterns = [
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^register/$', views.register),
     url(r'^games/$', views.games, name='games'),
-    url(r'^games/play/(?P<game_pk>[0-9]+)$', views.play),
-    url(r'^relatorios/(?P<game_pk>[0-9]+)$', views.relatorios),
+    url(r'^games/play/(?P<game_pk>[0-9]+)$', views.play, name='play'),
+    url(r'^relatorios/(?P<game_pk>[0-9]+)$', views.relatorios, name='relatorios'),
 
 ]
