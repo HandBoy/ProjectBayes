@@ -142,10 +142,10 @@ def relatorios(request, game_pk=None):
     wrong_dic_data = {}
     logs = LogSession.objects.filter(game_id=game_pk).filter(type_log=4)
     for w in logs:
-        if wrong_dic_data[w.expected] != 0 :
-            wrong_dic_data[w.expected] += 1
+        if w.expected in wrong_dic_data:
+            wrong_dic_data[w.expected]['value'] += 1
         else:
-             wrong_dic_data[w.expected] = 0
+             wrong_dic_data[w.expected] = {'value': 1}
 
     context['user_dic_data'] = user_dic_data
     context['wrong_dic_data'] = wrong_dic_data

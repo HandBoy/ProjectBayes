@@ -19,9 +19,26 @@
     <div class="row">
 
         <div id="chartBar" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
-        {% for worg in wrong_dic_data %}
-            {{ worg }}
-        {% endfor %}
+        <div id="chartPie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+
+        <table id="datatable2" class="">
+            <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Qtd Erro</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for key, value in wrong_dic_data.items %}
+                <tr>
+                    <th> Numero {{ key }}</th>
+                    <td>{{ value.value }}</td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
         <table id="datatable" class="invisible">
             <thead>
             <tr>
@@ -85,55 +102,101 @@
     <script type="text/javascript">
         $(function () {
             $('#chartBar').highcharts({
-            data: {
-                table: 'datatable'
-            },
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: 'Correct/Incorrect Answers '
-            },
-            yAxis: {
-                allowDecimals: true,
-                title: {
-                    text: null
-                }
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Jogadas',
-                    align: 'high'
+                data: {
+                    table: 'datatable'
                 },
-                labels: {
-                    overflow: 'justify'
+                chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: 'Correct/Incorrect Answers '
+                },
+                yAxis: {
+                    allowDecimals: true,
+                    title: {
+                        text: null
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Jogadas',
+                        align: 'high'
+                    },
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'top',
+                    x: -40,
+                    y: 80,
+                    floating: true,
+                    borderWidth: 1,
+                    backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                    shadow: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.series.name + '</b><br/>' +
+                                this.point.y + ' ' + this.point.name.toLowerCase();
+                    }
                 }
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -40,
-                y: 80,
-                floating: true,
-                borderWidth: 1,
-                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-                shadow: true
-            },
-            plotOptions: {
-                series: {
-                    stacking: 'normal'
+            });
+            $('#chartPie').highcharts({
+                data: {
+                    table: 'datatable2'
+                },
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Frequency of mistakes by Number.'
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'top',
+                    x: -40,
+                    y: 80,
+                    floating: true,
+                    borderWidth: 1,
+                    backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                    shadow: true
+                },
+                yAxis: {
+                    allowDecimals: false,
+                    title: {
+                        text: 'Units'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.point.name +'</b><br/>' + this.series.name + " "  + this.point.y;
+                    }
                 }
-            },
-            tooltip: {
-                formatter: function () {
-                    return '<b>' + this.series.name + '</b><br/>' +
-                        this.point.y + ' ' + this.point.name.toLowerCase();
-                }
-            }
+            });
         });
-    });
 
     </script>
 
