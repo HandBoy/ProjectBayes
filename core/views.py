@@ -128,16 +128,10 @@ def relatorios(request, game_pk=None):
         wrong = 0
         for log in user.log_session.filter(game_id=game_pk):
             if log.type_log.value == 3:
-                correct+=1
+                correct += 1
             elif log.type_log.value == 4:
-                wrong+=1
-
-            #correct += log.objects.filter(type_log=3).count()
-            #wrong   += log.objects.filter(type_log=4).count()
-            #print(correct)
-
+                wrong += 1
         user_dic_data[user.username] = {'accept': correct, 'wrong': wrong}
-
 
     wrong_dic_data = {}
     logs = LogSession.objects.filter(game_id=game_pk).filter(type_log=4)
