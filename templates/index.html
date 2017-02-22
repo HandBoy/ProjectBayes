@@ -17,7 +17,7 @@
 {% block content %}
     {% for net in nets %}
         <div class="post">
-            <h2><a href="{% url 'core.views.baysianet_detail' pk=net.pk %}">{{ net.title }}</a></h2>
+            <h2><a href="{% url 'baysianet_detail' pk=net.pk %}">{{ net.title }}</a></h2>
         </div>
     {% endfor %}
 {% endblock %}
@@ -27,9 +27,9 @@
 
 
     <ul class="list-group">
-        <li class="list-group-item"><a href="{% url 'core.views.games' %}">Jogos</a></li>
-        <li class="list-group-item"><a href="{% url 'core.views.index' %}">Ver Redes</a></li>
-        <li class="list-group-item"><a href="{% url 'core.views.baysianet_new' %}">Nova Rede</a></li>
-        <li class="list-group-item"><a href="{% url 'core.views.games' %}">Relatórios</a></li>
+        <li class="list-group-item"><a href="{% url 'games' %}">Jogos</a></li>
+        <li class="list-group-item"><a href="{% url 'home' %}">Ver Redes</a></li>
+        <li class="list-group-item"><a href="{% url 'baysianet_new' %}">Nova Rede</a></li>
+        <li class="list-group-item"><a href="{% url 'games' %}">Relatórios</a></li>
     </ul>
 {% endblock %}

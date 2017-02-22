@@ -26,16 +26,16 @@ router.register(r'logs', LogSessionViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', view=views.index),
+    url(r'^$', views.index, name='home'),
     url(r'^baysianet/new/$', views.baysianet_new, name='baysianet_new'),
-    url(r'^baysianet/(?P<pk>[0-9]+)/$', views.baysianet_detail),
+    url(r'^baysianet/(?P<pk>[0-9]+)/$', views.baysianet_detail, name='baysianet_detail'),
     url(r'^competence/new/(?P<baysianet_pk>[0-9]+)$', views.competence_new),
     url(r'^competence/variable/new/(?P<competence_pk>[0-9]+)$', views.variable_new),
     url(r'^competence/(?P<pk>[0-9]+)/$', views.competence_detail),
     url(r'^api/', include(router.urls)),
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^register/$', views.register),
-    url(r'^games/$', view=views.games),
+    url(r'^games/$', views.games, name='games'),
     url(r'^games/play/(?P<game_pk>[0-9]+)$', views.play),
     url(r'^relatorios/(?P<game_pk>[0-9]+)$', views.relatorios),
 
