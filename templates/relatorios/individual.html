@@ -17,28 +17,39 @@
 
 {% block content %}
     <div class="row">
-        <h3>{{ game }}</h3>
-        <div id="chartBar" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
-        <div id="chartPie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+        <h3><span class="glyphicon glyphicon-user"></span> Aluno: {{ user.get_username }} </h3>
 
-        <table id="datatable2" class="invisible">
+        <table class="table table-bordered">
             <thead>
             <tr>
-                <th>Numero</th>
-                <th>Qtd Erro</th>
+                <th>Date</th>
+                <th>Hour</th>
+                <th>Performance</th>
+                <th>Simulator</th>
             </tr>
             </thead>
             <tbody>
 
-            {% for key, value in wrong_dic_data.items %}
-                <tr>
-                    <th> Numero {{ key }}</th>
-                    <td>{{ value.value }}</td>
-                </tr>
 
+            {% for key, value  in game_session_dic_data.items %}
+                <tr>
+                    <td>{{ value.game_session.created_date.date }}</td>
+                    <td>{{ value.game_session.created_date|date:"h:m:s" }}</td>
+                    <td>{{ value.performace}}% </td>
+                    <td><a href="#">Visualizar</a> </td>
+                </tr>
             {% endfor %}
+
             </tbody>
         </table>
+
+
+    </div>
+    <div class="row">
+
+        <div id="chartBar" style="min-width: 310px; max-width: 800px; height: 200px; margin: 0 auto"></div>
+        <br />
+        <div id="chartPie" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
         <table id="datatable" class="invisible">
             <thead>
             <tr>
@@ -57,27 +68,24 @@
                 </tr>
 
             {% endfor %}
+            </tbody>
+        </table>
+        <table id="datatable2" class="invisible">
+            <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Qtd Erro</th>
+            </tr>
+            </thead>
+            <tbody>
 
-            <tr>
-                <th>Jill</th>
-                <td>34</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <th>Eva</th>
-                <td>12</td>
-                <td>16</td>
-            </tr>
-            <tr>
-                <th>Jackson</th>
-                <td>5</td>
-                <td>11</td>
-            </tr>
-            <tr>
-                <th>Bill</th>
-                <td>5</td>
-                <td>11</td>
-            </tr>
+            {% for key, value in wrong_dic_data.items %}
+                <tr>
+                    <th> Numero {{ key }}</th>
+                    <td>{{ value.value }}</td>
+                </tr>
+
+            {% endfor %}
             </tbody>
         </table>
     </div>
@@ -88,7 +96,7 @@
     <p>Alunos</p>
     <ul class="list-group">
         {% for key, value in user_dic_data.items %}
-            <li class="list-group-item"><a href="{% url 'relatorio_individual' user_pk=value.id game_pk=game.id%}">{{ key }}</a></li>
+            <li class="list-group-item"><a href="{% url 'baysianet_detail' pk=value.id %}">{{ key }}</a></li>
         {% endfor %}
         <li class="list-group-item">Dapibus ac facilisis in</li>
         <li class="list-group-item">Morbi leo risus</li>

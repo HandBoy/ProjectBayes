@@ -126,7 +126,7 @@ def relatorios(request, game_pk=None):
     for user in users:
         total_correct = 0
         total_wrongs = 0
-        for game_session in user.game_session.filter(game_id=1):
+        for game_session in user.game_session.filter(game_id=game_pk):
             total_correct += game_session.log_session.filter(type_log=3).count()
             total_wrongs   += game_session.log_session.filter(type_log=4).count()
 
@@ -135,13 +135,44 @@ def relatorios(request, game_pk=None):
 
     wrong_dic_data = {}
     logs = LogSession.objects.filter(game_id=game_pk).filter(type_log=4)
-    for w in logs:
-        if w.expected in wrong_dic_data:
-            wrong_dic_data[w.expected]['value'] += 1
+    for wrongs in logs:
+        if wrongs.expected in wrong_dic_data:
+            wrong_dic_data[wrongs.expected]['value'] += 1
         else:
-            wrong_dic_data[w.expected] = {'value': 1}
+            wrong_dic_data[wrongs.expected] = {'value': 1}
 
-    #gamesession = GameSession.objects.filter(game_id=game_pk).values('user_id').distinct()
     context['user_dic_data'] = user_dic_data
     context['wrong_dic_data'] = wrong_dic_data
+    context['game'] = get_object_or_404(Game, pk=game_pk)
     return render(request, 'relatorios/index.html', context)
+
+
+def relatorio_individual(request, user_pk=None, game_pk=None):
+    context = {}
+    wrong_dic_data = {}
+    user_dic_data = {}
+    game_session_dic_data = {}
+    total_correct = 0
+    total_wrongs = 0
+    user = get_object_or_404(User, pk=user_pk)
+    game_session = GameSession.objects.filter(game_id=game_pk).filter(user_id=user_pk)
+
+    for session in game_session:
+        logs = LogSession.objects.filter(session=session.id)
+        for log in logs:
+            if log.type_log.value == 3:
+                total_correct += 1
+            elif log.type_log.value == 4:
+                total_wrongs += 1
+                if log.expected in wrong_dic_data:
+                    wrong_dic_data[log.expected]['value'] += 1
+                else:
+                    wrong_dic_data[log.expected] = {'value': 1}
+        game_session_dic_data[session.id] = {'game_session': session, 'accept': total_correct, 'wrong': total_wrongs,
+                                                 'id': user.id, 'performace': total_correct*100/(total_correct+total_wrongs)}
+
+    user_dic_data[user.username] = {'accept': total_correct, 'wrong': total_wrongs, 'id': user.id}
+    context['game_session_dic_data'] = game_session_dic_data
+    context['wrong_dic_data'] = wrong_dic_data
+    context['user_dic_data'] = user_dic_data
+    return render(request, 'relatorios/individual.html', context)

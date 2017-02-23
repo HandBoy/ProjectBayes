@@ -39,5 +39,6 @@ urlpatterns = [
     url(r'^games/$', views.games, name='games'),
     url(r'^games/play/(?P<game_pk>[0-9]+)$', views.play, name='play'),
     url(r'^relatorios/(?P<game_pk>[0-9]+)$', views.relatorios, name='relatorios'),
+    url(r'^relatorios/(?P<user_pk>[0-9]+)/(?P<game_pk>[0-9]+)$', views.relatorio_individual, name='relatorio_individual'),
 
 ]
