@@ -176,3 +176,12 @@ def relatorio_individual(request, user_pk=None, game_pk=None):
     context['wrong_dic_data'] = wrong_dic_data
     context['user_dic_data'] = user_dic_data
     return render(request, 'relatorios/individual.html', context)
+
+
+def simulator(request, session_pk=None):
+    context = {}
+    logs = LogSession.objects.filter(session_id=session_pk)
+    session = GameSession.objects.get(pk=session_pk)
+    context['game'] = get_object_or_404(Game, pk=session.game_id)
+    context['logs'] = logs
+    return render(request, 'relatorios/simulator.html', context)
