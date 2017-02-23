@@ -18,7 +18,6 @@
 {% block content %}
     <div class="row">
         <h3><span class="glyphicon glyphicon-user"></span> Aluno: {{ user.get_username }} </h3>
-
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -36,14 +35,12 @@
                     <td>{{ value.game_session.created_date.date }}</td>
                     <td>{{ value.game_session.created_date|date:"h:m:s" }}</td>
                     <td>{{ value.performace}}% </td>
-                    <td><a href="#">Visualizar</a> </td>
+                    <td><a href="{% url 'simulator' session_pk=value.game_session.id %}">Visualizar</a> </td>
                 </tr>
             {% endfor %}
 
             </tbody>
         </table>
-
-
     </div>
     <div class="row">
 
