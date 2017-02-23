@@ -56,3 +56,19 @@ hr {
     display: none;
     visibility: hidden;
 }
+
+#simuladorRespostas{
+    font-size: 24px;
+    text-align: center;
+}
+
+#simuladorRespostas > div{
+    border: solid 2px;
+    height: 43px;
+}
+
+#player{
+    text-align: center;
+    font-size: 25px;
+    padding-top: 25px;
+}
