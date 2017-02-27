@@ -31,11 +31,11 @@ $(document).ready(function(){
     var toten = -1;
 
     $("#backward").click(function(){
-        toten--;
-        if(toten < 0){
-            toten = valor.length-1;
-        } else if(toten > valor.length){
-            toten=0;
+        if(toten >= 0){
+            removeValueSimulator(toten);
+            toten--;
+        } else {
+            alert("Chegou ao inicio da simulação");
         }
     });
 
@@ -54,12 +54,23 @@ $(document).ready(function(){
 
     function addValueSimulator(valor){
         var trs = logs[valor].children;
-            if(trs[0].childNodes[0].textContent == "erro"){
-                $("#numeroErrado"+trs[1].childNodes[0].textContent).text(trs[2].childNodes[0].textContent);
-                $("#numeroErrado"+trs[1].childNodes[0].textContent).addClass("numberError")
-            } else if(trs[0].childNodes[0].textContent == "acerto"){
-                $("#numero"+trs[1].childNodes[0].textContent).text(trs[2].childNodes[0].textContent);
-                $("#numero"+trs[1].childNodes[0].textContent).addClass("numberRight")
-            }
+        if(trs[0].childNodes[0].textContent == "erro"){
+            $("#numeroErrado"+trs[1].childNodes[0].textContent).text(trs[2].childNodes[0].textContent);
+            $("#numeroErrado"+trs[1].childNodes[0].textContent).addClass("numberError");
+        } else if(trs[0].childNodes[0].textContent == "acerto"){
+            $("#numero"+trs[1].childNodes[0].textContent).text(trs[2].childNodes[0].textContent);
+            $("#numero"+trs[1].childNodes[0].textContent).addClass("numberRight");
+        }
+    }
+
+    function removeValueSimulator(valor){
+        var trs = logs[valor].children;
+        if(trs[0].childNodes[0].textContent == "erro"){
+            $("#numeroErrado"+trs[1].childNodes[0].textContent).text(" ");
+            $("#numeroErrado"+trs[1].childNodes[0].textContent).removeClass("numberError");
+        } else if(trs[0].childNodes[0].textContent == "acerto"){
+            $("#numero"+trs[1].childNodes[0].textContent).text(" ");
+            $("#numero"+trs[1].childNodes[0].textContent).removeClass("numberRight");
+        }
     }
 });
