@@ -27,17 +27,16 @@
                 <th>Simulator</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
 
-
-            {% for key, value  in game_session_dic_data.items %}
-                <tr>
-                    <td>{{ value.game_session.created_date.date }}</td>
-                    <td>{{ value.game_session.created_date|date:"h:m:s" }}</td>
-                    <td>{{ value.performace}}% </td>
-                    <td><a href="{% url 'simulator' session_pk=value.game_session.id %}">Visualizar</a> </td>
-                </tr>
-            {% endfor %}
+                {% for key, value  in game_session_dic_data.items %}
+                    <tr>
+                        <td>{{ value.game_session.created_date.date }}</td>
+                        <td>{{ value.game_session.created_date|date:"h:m:s" }}</td>
+                        <td>{{ value.performace}}% </td>
+                        <td><a href="{% url 'simulator' session_pk=value.game_session.id %}">Visualizar</a> </td>
+                    </tr>
+                {% endfor %}
 
             </tbody>
         </table>

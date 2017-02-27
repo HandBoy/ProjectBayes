@@ -67,8 +67,22 @@ hr {
     height: 43px;
 }
 
+#simuladorRespostasErradas > div{
+    height: 43px;
+    font-size: 24px;
+    text-align: center;
+}
+
 #player{
     text-align: center;
     font-size: 25px;
     padding-top: 25px;
+}
+
+.numberError{
+    background-color: firebrick;
+}
+
+.numberRight{
+    background-color: aquamarine;
 }

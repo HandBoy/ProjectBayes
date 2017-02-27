@@ -22,6 +22,18 @@
         <h2>Jogo: {{ game }}</h2>
     </div>
     <br /><br />
+    <div id="simuladorRespostasErradas" class="row">
+          <div id="numeroErrado0" class="col-md-1 col-md-offset-1"></div>
+          <div id="numeroErrado1" class="col-md-1"></div>
+          <div id="numeroErrado2" class="col-md-1"></div>
+          <div id="numeroErrado3" class="col-md-1"></div>
+          <div id="numeroErrado4" class="col-md-1"></div>
+          <div id="numeroErrado5" class="col-md-1"></div>
+          <div id="numeroErrado6" class="col-md-1"></div>
+          <div id="numeroErrado7" class="col-md-1"></div>
+          <div id="numeroErrado8" class="col-md-1"></div>
+          <div id="numeroErrado9" class="col-md-1"></div>
+    </div>
     <div id="simuladorRespostas" class="row">
           <div id="numero0" class="col-md-1 col-md-offset-1"></div>
           <div id="numero1" class="col-md-1"></div>
@@ -32,7 +44,7 @@
           <div id="numero6" class="col-md-1"></div>
           <div id="numero7" class="col-md-1"></div>
           <div id="numero8" class="col-md-1"></div>
-          <div id="numero9" class="col-md-1">1</div>
+          <div id="numero9" class="col-md-1"></div>
     </div>
     <div id="player" class="row">
         <a id="backward" href="#"><span class="glyphicon glyphicon-backward"></span></a>
@@ -53,11 +65,15 @@
             </thead>
             <tbody>
             {% for log  in logs %}
-                <tr {% if log.type_log.value == 1 %} id="inicio" {% endif %}>
+                <tr {% if log.type_log.value == 1 %}
+                        id="inicio"
+                    {% elif log.type_log.value == 2 %}
+                        id="fim"
+                    {% endif %}>
                     <td >{{ log.type_log }}</td>
-                    <td>{{ log.expected}} </td>
-                    <td>{{ log.result}} </td>
-                    <td>{{ log.data}} </td>
+                    <td>{{ log.expected}}</td>
+                    <td>{{ log.result}}</td>
+                    <td>{{ log.data}}</td>
                     <td>{{ log.created_date|date:"h:m:s" }}</td>
                 </tr>
             {% endfor %}
