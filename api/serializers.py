@@ -11,12 +11,12 @@ class BaysianNetSerializer(serializers.ModelSerializer):
 class LogSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LogSession
-        fields = ('type_log', 'user', 'game', 'expected', 'result', 'score', 'data')
+        fields = ('type_log', 'user', 'game', 'session', 'expected', 'result', 'score', 'data')
 
 
 class GameSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameSession
-        fields = ( 'game', 'user', 'goal', 'score', 'finish')
+        fields = ('game', 'user', 'goal', 'score', 'finish')
 
 
