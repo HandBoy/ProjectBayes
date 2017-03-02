@@ -43,14 +43,8 @@ class Hierarchy(models.Model):
     def __str__(self):
         return self.competency.title
 
-class HierarchyFather(models.Model):
-    father = models.ForeignKey(Hierarchy, related_name='father')
-    child = models.ForeignKey(Hierarchy, related_name='child')
-
-
-
 # ######################################
-# Models for resolve sessions user and
+# Models for resolve sessions user
 # ######################################
 class Game(models.Model):
     title = models.CharField(max_length=200, verbose_name='Título')
@@ -79,6 +73,7 @@ class LogSession(models.Model):
     result = models.IntegerField(verbose_name='Resultado Alcançado', null=True, blank=True)
     score = models.IntegerField(verbose_name='Pontuação', null=True, blank=True)
     data = models.CharField(max_length=255, verbose_name='Dados', null=True, blank=True)
+    table_points = models.ForeignKey('TablePoints')
     created_date = models.DateTimeField(auto_now_add=True)
 
 
@@ -88,4 +83,18 @@ class TypeLogSession(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# ######################################
+# Models for resolve sessions user and
+# ######################################e
+class TablePoints(models.Model):
+    game = models.ForeignKey('Game')
+    competency = models.ForeignKey('Competence')
+    type_log = models.ForeignKey('TypeLogSession')
+    rule = models.CharField(max_length=255, verbose_name='Regra', null=True, blank=True)
+    score = models.IntegerField(verbose_name='Pontuacao')
+    created_date = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.rule + " " + self.type_log.name
 

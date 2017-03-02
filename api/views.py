@@ -1,7 +1,8 @@
+
 from rest_framework import viewsets
-from core.models import BaysianNet, LogSession, GameSession
+from core.models import BaysianNet, LogSession, GameSession, TablePoints
 from .serializers import BaysianNetSerializer, LogSessionSerializer, GameSessionSerializer
-from rest_framework.decorators import detail_route
+
 # Create your views here.
 
 
@@ -13,12 +14,32 @@ class BaysianNetViewSet(viewsets.ModelViewSet):
 class LogSessionViewSet(viewsets.ModelViewSet):
     queryset = LogSession.objects.all()
     serializer_class = LogSessionSerializer
-    # For POST Requests
+
     def perform_create(self, serializer):
-        serializer.save(score=777)
+        logData = self.request.data
+        print(logData)
+        point = TablePoints.objects.get(id=logData['table_points'])
+        score = point.score
+        if logData['type_log'] == '2':
+            logs = LogSession.objects.filter(session=logData['session'])
+            scoreLog = 0
+            for log in logs:
+                if log.type_log.value == 3:
+                    scoreLog += log.score
+                    print(scoreLog)
+                elif log.type_log.value == 4:
+                    scoreLog -= log.score
+                    print(scoreLog)
+            session = GameSession.objects.get(id=logData['session'])
+            session.score = scoreLog
+            session.save()
+            print(scoreLog)
+
+        serializer.save(score=score)
 
 
 class GameSessionViewSet(viewsets.ModelViewSet):
     queryset = GameSession.objects.all()
     serializer_class = GameSessionSerializer
+
 
