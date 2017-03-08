@@ -3,7 +3,20 @@
  */
 
 $(document).ready(function(){
-    var logs = $('tbody > tr:not([id])');
+
+    var td = $(this).children('td:eq(3)');
+    console.log(td.text());
+
+    var filhos = $('#inicio:first-child');
+    var valores = filhos.children('td:eq(3)').text();
+    var valor = valores.split(";");
+
+    for (var i=0;i<valor.length;i++){
+        $("#numero"+valor[i]).text(valor[i]);
+    }
+
+    var logs = $('tbody > #inicio');
+    console.log(logs[0]);
 
     var toten = -1;
 
