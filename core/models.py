@@ -27,7 +27,7 @@ class Competence(models.Model):
 class Variable(models.Model):
     title = models.CharField(max_length=200, verbose_name='Título')
     value = models.IntegerField(verbose_name='Valor', help_text='Valor da variável', blank=True)
-    competence = models.ForeignKey('Competence')
+    competence = models.ForeignKey('Competence', related_name='variable')
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -60,7 +60,9 @@ class GameSession(models.Model):
     user = models.ForeignKey('auth.User', related_name='game_session')                       # user id  que starded the session
     goal = models.IntegerField(verbose_name='Objetivo', null=True, blank=True)
     score = models.IntegerField(verbose_name='Resultado Final', null=True, blank=True) #Final result of the session
-    finish = models.BooleanField(default=False)
+    finish = models.BooleanField(default=False) # 0 false 1 true
+    level = models.ForeignKey('TypeLogSession')
+    percent_finish = models.FloatField(verbose_name='Percentual', default=0, null=True, blank=True) #Final result of the session
     created_date = models.DateTimeField(auto_now_add=True)
 
 
@@ -85,15 +87,17 @@ class TypeLogSession(models.Model):
         return self.name
 
 
+
+
 # ######################################
 # Models for resolve sessions user and
 # ######################################e
 class TablePoints(models.Model):
     game = models.ForeignKey('Game')
-    competency = models.ForeignKey('Competence')
-    type_log = models.ForeignKey('TypeLogSession')
-    rule = models.CharField(max_length=255, verbose_name='Regra', null=True, blank=True)
-    score = models.IntegerField(verbose_name='Pontuacao')
+    competency = models.ForeignKey('Competence', null=True, blank=True)
+    type_log = models.ForeignKey('TypeLogSession', null=True, blank=True)
+    rule = models.CharField(max_length=255, verbose_name='Regra')
+    score = models.IntegerField(verbose_name='Pontuacao', null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.rule + " " + self.type_log.name
