@@ -18,7 +18,7 @@ class Competence(models.Model):
     title = models.CharField(max_length=200, verbose_name='Título')
     text = models.TextField(verbose_name='Postagem', help_text='Informações')
     baysianet = models.ForeignKey('BaysianNet', related_name='competency')
-    competencs = models.ManyToManyField('Competence', blank=True)
+    #competencs = models.ManyToManyField('Competence', blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -37,11 +37,12 @@ class Variable(models.Model):
 # Struture for expressing multidimensional relationships
 class Hierarchy(models.Model):
     baysianet = models.ForeignKey('BaysianNet')
-    competency = models.ForeignKey('Competence')
-    root = models.BooleanField(default=False)
+    competency_father = models.ForeignKey(Competence, related_name='father')
+    competency_child = models.ForeignKey(Competence, related_name='child')
 
     def __str__(self):
-        return self.competency.title
+        return self.competency_father.title
+
 
 # ######################################
 # Models for resolve sessions user
@@ -49,6 +50,7 @@ class Hierarchy(models.Model):
 class Game(models.Model):
     title = models.CharField(max_length=200, verbose_name='Título')
     text = models.TextField(verbose_name='Postagem', help_text='Informações')
+    competence = models.ManyToManyField(Competence)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -75,6 +77,7 @@ class LogSession(models.Model):
     result = models.IntegerField(verbose_name='Resultado Alcançado', null=True, blank=True)
     score = models.IntegerField(verbose_name='Pontuação', null=True, blank=True)
     data = models.CharField(max_length=255, verbose_name='Dados', null=True, blank=True)
+    competency = models.ForeignKey('Competence', null=True, blank=True)
     table_points = models.ForeignKey('TablePoints')
     created_date = models.DateTimeField(auto_now_add=True)
 
@@ -87,7 +90,12 @@ class TypeLogSession(models.Model):
         return self.name
 
 
-
+class CompetenceUser(models.Model):
+    game = models.ForeignKey('Game')
+    competency = models.ForeignKey('Competence', null=True, blank=True)
+    user = models.ForeignKey('auth.User')
+    level = models.ForeignKey('TypeLogSession')
+    created_date = models.DateTimeField(auto_now_add=True)
 
 # ######################################
 # Models for resolve sessions user and

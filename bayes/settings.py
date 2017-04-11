@@ -25,7 +25,7 @@ SECRET_KEY = '=@zs793nsfizk5hyjbo2_aj_2ml%x$)tjqr@(3mqgz=sb46)5x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -87,8 +87,13 @@ WSGI_APPLICATION = 'bayes.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'bayesproject',
+        'USER': 'postgres',
+        'PASSWORD': '123',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

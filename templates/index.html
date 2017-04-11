@@ -17,7 +17,7 @@
 {% block content %}
     {% for net in nets %}
         <div class="post">
-            <h2><a href="{% url 'baysianet_detail' pk=net.pk %}">{{ net.title }}</a></h2>
+            <h2><a href="{% url 'net_detail' pk=net.pk %}">{{ net.title }}</a></h2>
         </div>
     {% endfor %}
 {% endblock %}

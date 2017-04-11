@@ -12,19 +12,33 @@
 
         <h1>{{ baysianet.title }}</h1>
         <div class="date">
-            <a class="btn btn-default" href="{% url 'core.views.competence_new' baysianet_pk=baysianet.pk%}"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="btn btn-default" href="{% url 'competency_new' baysianet_pk=baysianet.pk%}"><span class="glyphicon glyphicon-plus"></span></a>
+        </div>
+        <h2>Hierarquias</h2>
+        <div class="post">
+            {% for key, value  in rede.items %}
+                <h3>
+                    {{ key.title}}
+                </h3>
+                    {% for hiera in value %}
+                        {{ hiera.competency_child }}
+
+                    {% endfor %}
+                <hr/>
+            {% endfor %}
         </div>
         <h2>Competências</h2>
         <div class="post">
             {% for competencia in baysianet.competency.all %}
-                <h3>
-                    <a href="{% url 'core.views.variable_new' competence_pk=competencia.pk%} " data-toggle="tooltip" title="Add Variable"><span class="glyphicon glyphicon-plus"></span></a>
-                    {{ competencia.title }} </h3>
-
+                <h4>
+                    <a href="{% url 'variable_new' competence_pk=competencia.pk%} " data-toggle="tooltip" title="Add Variable"><span class="glyphicon glyphicon-plus"></span></a>
+                    {{ competencia.title }} </h4>
+                    {% for var in competencia.variable.all %}
+                            <p>{{ var.title }} {{ var.value }}% </p>
+                        {% endfor %}
                     {% for competency in competencia.competencs.all %}
                         <p>{{ competency.title }}</p>
                     {% endfor %}
-                <hr/>
             {% endfor %}
         </div>
     </div>
@@ -33,8 +47,8 @@
 
 {% block list-group %}
     <ul class="list-group">
-        <li class="list-group-item"><a href="{% url 'core.views.competence_new' baysianet.pk %}">Nova Competencia</a></li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item"><a href="{% url 'competency_new' baysianet.pk %}">Nova Competencia</a></li>
+        <li class="list-group-item"><a href="{% url 'hierarchy_new' baysianet.pk %}">Nova Hierarquia</a></li>
         <li class="list-group-item">Morbi leo risus</li>
         <li class="list-group-item">Porta ac consectetur ac</li>
         <li class="list-group-item">Vestibulum at eros</li>

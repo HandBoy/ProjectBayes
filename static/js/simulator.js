@@ -15,8 +15,7 @@ $(document).ready(function(){
         $("#numero"+valor[i]).text(valor[i]);
     }
 
-    var logs = $('tbody > #inicio');
-    console.log(logs[0]);
+    var logs = $('tbody > tr:not([id])');
 
     var toten = -1;
 

@@ -1,5 +1,5 @@
 from django import forms
-from core.models import BaysianNet, Competence, Variable
+from core.models import BaysianNet, Competence, Variable, Hierarchy
 import re
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -20,6 +20,12 @@ class CompetenceForm(forms.ModelForm):
 class VariableForm(forms.ModelForm):
     class Meta:
         model = Variable
+        fields = '__all__'
+
+
+class HierarchyForm(forms.ModelForm):
+    class Meta:
+        model = Hierarchy
         fields = '__all__'
 
 

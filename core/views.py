@@ -2,8 +2,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext
 
-from core.models import BaysianNet, Competence, LogSession, Game, GameSession
-from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm
+from core.models import BaysianNet, Competence, LogSession, Game, GameSession, CompetenceUser, Hierarchy
+from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm, HierarchyForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
@@ -33,7 +33,21 @@ def baysianet_new(request):
 
 def baysianet_detail(request, pk):
     context = {}
+    rede = {}
     baysianet = get_object_or_404(BaysianNet, pk=pk)
+    hierarchies = Hierarchy.objects.filter(baysianet=pk)
+    father = hierarchies.distinct('competency_father')
+    print(father.count())
+    for pai in father.all():
+        print(pai.competency_father_id)
+        filhos = hierarchies.filter(competency_father=pai.competency_father_id)
+        print(filhos.count())
+        rede[pai.competency_father] = filhos.all()
+        #for filho in filhos.all():
+            #rede[pai.competency_father].append(filho)
+
+    print(rede)
+    context['rede'] = rede
     context['baysianet'] = baysianet
     return render(request, 'baysianet_detail.html', context)
 
@@ -67,10 +81,25 @@ def competence_new(request, baysianet_pk=None):
             return redirect('core.views.baysianet_detail', baysianet_pk)
     else:
         form = CompetenceForm()
-    return render(request, 'competence_new.html', {'form': form,
+    return render(request, 'net/competence_new.html', {'form': form,
                                                    'hierarchy_list': hierarchy_list,
                                                    'baysianet': baysianet})
+def hierarchy_new(request, baysianet_pk=None):
+    context = {}
+    if baysianet_pk:
+        baysianet = get_object_or_404(BaysianNet, pk=baysianet_pk)
+        context['baysianet'] = baysianet
 
+    if request.method == "POST":
+        form = HierarchyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('net_detail', baysianet_pk)
+    else:
+        form = HierarchyForm()
+
+    return render(request, 'net/hierarchy_new.html', {'form': form,
+                                                   'baysianet': baysianet})
 
 def variable_detail(request, competency_pk=None):
     context = {}
@@ -152,10 +181,24 @@ def relatorio_individual(request, user_pk=None, game_pk=None):
     wrong_dic_data = {}
     user_dic_data = {}
     game_session_dic_data = {}
+    competence_dic_data = {}
     total_correct = 0
     total_wrongs = 0
     user = get_object_or_404(User, pk=user_pk)
     game_session = GameSession.objects.filter(game_id=game_pk).filter(user_id=user_pk)
+    game = Game.objects.get(pk=game_pk)
+
+    #
+    competences = Competence.objects.filter(game=game_pk)
+    for comp in competences:
+        acerto = LogSession.objects.filter(user_id=user_pk).filter(competency=comp).filter(type_log=3).count()
+        erro = LogSession.objects.filter(user_id=user_pk).filter(competency=comp).filter(type_log=4).count()
+        total = acerto*100/(acerto+erro)
+        competence_dic_data[comp.title] = {'name': comp.title}
+        competence_dic_data[comp.title] = {'acerto': acerto}
+        competence_dic_data[comp.title] = {'erro': erro}
+        competence_dic_data[comp.title] = {'total': total}
+
 
     for session in game_session:
         logs = LogSession.objects.filter(session=session.id)
@@ -168,13 +211,18 @@ def relatorio_individual(request, user_pk=None, game_pk=None):
                     wrong_dic_data[log.expected]['value'] += 1
                 else:
                     wrong_dic_data[log.expected] = {'value': 1}
+
+
         game_session_dic_data[session.id] = {'game_session': session, 'accept': total_correct, 'wrong': total_wrongs,
-                                                 'id': user.id, 'performace': total_correct*100/(total_correct+total_wrongs)}
+                                                 'id': user.id, 'percent_finish': session.percent_finish}
 
     user_dic_data[user.username] = {'accept': total_correct, 'wrong': total_wrongs, 'id': user.id}
     context['game_session_dic_data'] = game_session_dic_data
     context['wrong_dic_data'] = wrong_dic_data
     context['user_dic_data'] = user_dic_data
+    context['game'] = game
+    context['competence_dic_data'] = competence_dic_data
+    context['userRelatorio'] = user
     return render(request, 'relatorios/individual.html', context)
 
 

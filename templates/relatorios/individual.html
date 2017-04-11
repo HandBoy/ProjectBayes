@@ -17,30 +17,73 @@
 
 {% block content %}
     <div class="row">
-        <h3><span class="glyphicon glyphicon-user"></span> Aluno: {{ user.get_username }} </h3>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Hour</th>
-                <th>Performance</th>
-                <th>Simulator</th>
-            </tr>
-            </thead>
-            <tbody id="tableBody">
+        <h3><span class="glyphicon glyphicon-user"></span> Aluno: {{ userRelatorio }}  Jogo: {{ game.title }}</h3>
 
-                {% for key, value  in game_session_dic_data.items %}
+            <div class="col-md-5">
+                <h4>Atingido</h4>
+                <table class="table table-bordered">
+                    <thead>
                     <tr>
-                        <td>{{ value.game_session.created_date.date }}</td>
-                        <td>{{ value.game_session.created_date|date:"h:m:s" }}</td>
-                        <td>{{ value.performace}}% </td>
-                        <td><a href="{% url 'simulator' session_pk=value.game_session.id %}">Visualizar</a> </td>
+                        <th>Competência</th>
+                        <th>Valor</th>
+                        <th>Nível</th>
                     </tr>
-                {% endfor %}
+                    </thead>
+                    <tbody id="tableBody">
 
-            </tbody>
-        </table>
+                    {%  for key, value in competence_dic_data.items %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value.total|floatformat }}%</td>
+                            <td>
+                                {% if value.total >= 90  %}
+                                    High
+                                {% elif value.total <= 40 %}
+                                    Low
+                                {% else %}
+                                    Medium
+                                {% endif %}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+
     </div>
+
+    <div class="row">
+    <h4> Sessões:</h4>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Hour</th>
+            <th>Nível</th>
+            <th>Performance</th>
+            <th>Simulator</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+
+        {% for key, value  in game_session_dic_data.items %}
+            <tr>
+                <td>{{ value.game_session.created_date.date }}</td>
+                <td>{{ value.game_session.created_date|date:"h:m:s" }}</td>
+                <td>{{ value.game_session.level}} </td>
+                <td>{{ value.game_session.percent_finish|floatformat}}% </td>
+                <td><a href="{% url 'simulator' session_pk=value.game_session.id %}">Visualizar</a> </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+
     <div class="row">
 
         <div id="chartBar" style="min-width: 310px; max-width: 800px; height: 200px; margin: 0 auto"></div>
@@ -97,7 +140,7 @@
         <li class="list-group-item">Dapibus ac facilisis in</li>
         <li class="list-group-item">Morbi leo risus</li>
         <li class="list-group-item">Porta ac consectetur ac</li>
-        <li class="list-group-item">Vestibulum at eros</li>
+        <li class="list-group-item"><a href="{% url 'home' %}">Ver Redes</a></li>
     </ul>
 {% endblock %}
 
