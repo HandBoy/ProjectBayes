@@ -49,7 +49,7 @@ def baysianet_detail(request, pk):
     print(rede)
     context['rede'] = rede
     context['baysianet'] = baysianet
-    return render(request, 'baysianet_detail.html', context)
+    return render(request, 'net/baysianet_detail.html', context)
 
 
 def competencies(request):
@@ -62,7 +62,7 @@ def competence_detail(request, pk):
     context = {}
     competence = get_object_or_404(Competence, pk=pk)
     context['competence'] = competence
-    return render(request, 'baysianet_detail.html', context)
+    return render(request, 'net/baysianet_detail.html', context)
 
 
 @login_required
