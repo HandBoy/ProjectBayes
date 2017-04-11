@@ -37,16 +37,10 @@ def baysianet_detail(request, pk):
     baysianet = get_object_or_404(BaysianNet, pk=pk)
     hierarchies = Hierarchy.objects.filter(baysianet=pk)
     father = hierarchies.distinct('competency_father')
-    print(father.count())
     for pai in father.all():
-        print(pai.competency_father_id)
         filhos = hierarchies.filter(competency_father=pai.competency_father_id)
-        print(filhos.count())
         rede[pai.competency_father] = filhos.all()
-        #for filho in filhos.all():
-            #rede[pai.competency_father].append(filho)
 
-    print(rede)
     context['rede'] = rede
     context['baysianet'] = baysianet
     return render(request, 'net/baysianet_detail.html', context)
@@ -119,7 +113,7 @@ def variable_new(request, competency_pk=None):
     else:
         form = VariableForm()
 
-    return render(request, 'variable_new.html', {'form': form, 'context': comp})
+    return render(request, 'net/variable_new.html', {'form': form, 'context': comp})
 
 
 def register(request):
