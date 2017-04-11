@@ -78,7 +78,7 @@ def competence_new(request, baysianet_pk=None):
         form = CompetenceForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('core.views.baysianet_detail', baysianet_pk)
+            return redirect('net_detail', baysianet_pk)
     else:
         form = CompetenceForm()
     return render(request, 'net/competence_new.html', {'form': form,
