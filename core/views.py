@@ -103,13 +103,13 @@ def variable_detail(request, competency_pk=None):
 
 
 @login_required
-def variable_new(request, competency_pk=None):
+def variable_new(request, competency_pk=None, baysianet_pk=None):
     comp = get_object_or_404(Competence, pk=competency_pk)
     if request.method == "POST":
         form = VariableForm(request.POST)
         if form.is_valid():
             form.save()
-            return render('core.views.baysianet_detail.html', pk=comp.baysianet_id)
+            return redirect('net_detail', baysianet_pk)
     else:
         form = VariableForm()
 

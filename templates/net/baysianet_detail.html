@@ -31,7 +31,7 @@
         <div class="post">
             {% for competencia in baysianet.competency.all %}
                 <h4>
-                    <a href="{% url 'variable_new' competence_pk=competencia.pk%} " data-toggle="tooltip" title="Add Variable"><span class="glyphicon glyphicon-plus"></span></a>
+                    <a href="{% url 'variable_new' competencia.pk baysianet.pk %} " data-toggle="tooltip" title="Add Variable"><span class="glyphicon glyphicon-plus"></span></a>
                     {{ competencia.title }} </h4>
                     {% for var in competencia.variable.all %}
                             <p>{{ var.title }} {{ var.value }}% </p>

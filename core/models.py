@@ -26,7 +26,7 @@ class Competence(models.Model):
 
 class Variable(models.Model):
     title = models.CharField(max_length=200, verbose_name='Título')
-    value = models.IntegerField(verbose_name='Valor', help_text='Valor da variável', blank=True)
+    value = models.CharField(max_length=200, verbose_name='Valor', help_text='Valor da variável', blank=True)
     competence = models.ForeignKey('Competence', related_name='variable')
     created_date = models.DateTimeField(auto_now_add=True)
 
