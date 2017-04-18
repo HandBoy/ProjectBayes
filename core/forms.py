@@ -1,8 +1,9 @@
 from django import forms
-from core.models import BaysianNet, Competence, Variable, Hierarchy
-import re
+from core.models import BaysianNet, Competence, Variable, Hierarchy, ConditionalProbabilityTable
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+
+import re
 
 
 class BaysianForm(forms.ModelForm):
@@ -26,6 +27,12 @@ class VariableForm(forms.ModelForm):
 class HierarchyForm(forms.ModelForm):
     class Meta:
         model = Hierarchy
+        fields = '__all__'
+
+
+class ConditionalProbabilityTableForm(forms.ModelForm):
+    class Meta:
+        model = ConditionalProbabilityTable
         fields = '__all__'
 
 

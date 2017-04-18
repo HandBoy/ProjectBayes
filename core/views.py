@@ -3,9 +3,12 @@ from django.shortcuts import render, redirect, get_object_or_404, render_to_resp
 from django.template import RequestContext
 
 from core.models import BaysianNet, Competence, LogSession, Game, GameSession, CompetenceUser, Hierarchy
-from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm, HierarchyForm
+from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm, HierarchyForm, \
+    ConditionalProbabilityTableForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
+import itertools
 
 
 # Create your views here.
@@ -13,8 +16,8 @@ def index(request):
     context = {}
     context['nets'] = BaysianNet.objects.all()
     # Number of visits to this view, as counted in the session variable.
-    num_visits=request.session.get('num_visits', 0)
-    request.session['num_visits'] = num_visits+1
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
     context['num_visits'] = num_visits
     return render(request, 'index.html', context)
 
@@ -76,8 +79,10 @@ def competence_new(request, baysianet_pk=None):
     else:
         form = CompetenceForm()
     return render(request, 'net/competence_new.html', {'form': form,
-                                                   'hierarchy_list': hierarchy_list,
-                                                   'baysianet': baysianet})
+                                                       'hierarchy_list': hierarchy_list,
+                                                       'baysianet': baysianet})
+
+
 def hierarchy_new(request, baysianet_pk=None):
     context = {}
     if baysianet_pk:
@@ -93,7 +98,8 @@ def hierarchy_new(request, baysianet_pk=None):
         form = HierarchyForm()
 
     return render(request, 'net/hierarchy_new.html', {'form': form,
-                                                   'baysianet': baysianet})
+                                                      'baysianet': baysianet})
+
 
 def variable_detail(request, competency_pk=None):
     context = {}
@@ -116,6 +122,33 @@ def variable_new(request, competency_pk=None, baysianet_pk=None):
     return render(request, 'net/variable_new.html', {'form': form, 'context': comp})
 
 
+def ctp_new(request, competency_pk=None, baysianet_pk=None):
+    ctp_dic_data = {}
+    variable_dic_data = {}
+    context = {}
+    list = []
+    listVariables = []
+    form = ConditionalProbabilityTableForm()
+    number = 1
+    if request.method == "POST":
+        form = ConditionalProbabilityTableForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('net_detail', baysianet_pk)
+    else:
+        hierarchies = Hierarchy.objects.filter(baysianet=baysianet_pk, competency_father=competency_pk)
+        for hierarchy in hierarchies:
+            ctp_dic_data.update({hierarchy.competency_father: hierarchy.competency_father.variable.all()})
+            variable_dic_data.update({hierarchy.competency_child: hierarchy.competency_child.variable.all()})
+            number = number * hierarchy.competency_child.variable.all().count()
+
+    return render(request, 'net/ctp_new.html', {'form': form,
+                                                'ctp_dic_data': ctp_dic_data,
+                                                'variable_dic_data': variable_dic_data,
+                                                'range': range(number),
+                                                'listVariables': listVariables})
+
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -126,7 +159,7 @@ def register(request):
             return HttpResponseRedirect('/')
     form = RegistrationForm()
     variables = RequestContext(request, {'form': form})
-    return render_to_response('registration/register.html',variables)
+    return render_to_response('registration/register.html', variables)
 
 
 def games(request):
@@ -151,7 +184,7 @@ def relatorios(request, game_pk=None):
         total_wrongs = 0
         for game_session in user.game_session.filter(game_id=game_pk):
             total_correct += game_session.log_session.filter(type_log=3).count()
-            total_wrongs   += game_session.log_session.filter(type_log=4).count()
+            total_wrongs += game_session.log_session.filter(type_log=4).count()
 
         if total_correct != 0:
             user_dic_data[user.username] = {'accept': total_correct, 'wrong': total_wrongs, 'id': user.id}
@@ -187,12 +220,11 @@ def relatorio_individual(request, user_pk=None, game_pk=None):
     for comp in competences:
         acerto = LogSession.objects.filter(user_id=user_pk).filter(competency=comp).filter(type_log=3).count()
         erro = LogSession.objects.filter(user_id=user_pk).filter(competency=comp).filter(type_log=4).count()
-        total = acerto*100/(acerto+erro)
+        total = acerto * 100 / (acerto + erro)
         competence_dic_data[comp.title] = {'name': comp.title}
         competence_dic_data[comp.title] = {'acerto': acerto}
         competence_dic_data[comp.title] = {'erro': erro}
         competence_dic_data[comp.title] = {'total': total}
-
 
     for session in game_session:
         logs = LogSession.objects.filter(session=session.id)
@@ -206,9 +238,8 @@ def relatorio_individual(request, user_pk=None, game_pk=None):
                 else:
                     wrong_dic_data[log.expected] = {'value': 1}
 
-
         game_session_dic_data[session.id] = {'game_session': session, 'accept': total_correct, 'wrong': total_wrongs,
-                                                 'id': user.id, 'percent_finish': session.percent_finish}
+                                             'id': user.id, 'percent_finish': session.percent_finish}
 
     user_dic_data[user.username] = {'accept': total_correct, 'wrong': total_wrongs, 'id': user.id}
     context['game_session_dic_data'] = game_session_dic_data

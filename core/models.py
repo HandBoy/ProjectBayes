@@ -33,7 +33,6 @@ class Variable(models.Model):
     def __str__(self):
         return self.title
 
-# ######################################
 # Struture for expressing multidimensional relationships
 class Hierarchy(models.Model):
     baysianet = models.ForeignKey('BaysianNet')
@@ -43,6 +42,15 @@ class Hierarchy(models.Model):
     def __str__(self):
         return self.competency_father.title
 
+
+class ConditionalProbabilityTable(models.Model):
+    baysianet = models.ForeignKey('BaysianNet')
+    variable_father = models.ForeignKey(Variable, related_name='father')
+    variable_child = models.ForeignKey(Variable, related_name='child')
+    value = models.CharField(max_length=200, verbose_name='Valor', help_text='Valor da variável', blank=True)
+
+    def __str__(self):
+        return self.variable_father.competence.title
 
 # ######################################
 # Models for resolve sessions user

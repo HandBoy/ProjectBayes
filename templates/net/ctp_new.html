@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block header %}
+    <div class="page-header">
+        <a href="" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+        <h1><a href="/">Rede Baysiana:</a> {{ baysianet.title }}</h1>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h1>Nova Hierarquia</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+        <h2>Adicionar Conditional Probability Table</h2>
+        <table class="table table-bordered">
+            <tr>
+                {% for key, value  in ctp_dic_data.items %}
+                <th class="tg-yw4l" colspan="5">P({{ key }} |  {% for key, value  in variable_dic_data.items %} {{ key }}, {% endfor %})</th>
+            </tr>
+            <tr>
+
+                    {% for variables in value %}
+                        <td>{{ key }}: {{ variables }} </td>
+                    {% endfor %}
+                {% endfor %}
+                {% for key, value  in variable_dic_data.items %}
+                    <td>{{ key }} </td>
+                {% endfor %}
+            </tr>
+            {% for i  in range %}
+                    <tr>
+                        {% for key, value  in ctp_dic_data.items %}
+                            {% for variables in value %}
+                                <td><input name="value" id="{{ variables.pk }}" type="text"></td>
+
+                            {% endfor %}
+                        {% endfor %}
+                        {% for key, value  in variable_dic_data.items %}
+                            <td>
+                                <select id="id_variable_child" name="variable_child">
+                                    {{ key }}
+                                    {% for variable in value %}
+                                        <option value="{{ variable.pk }}">{{ variable.value }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+            {% endfor %}
+
+
+            <tr>
+            </tr>
+
+            </table>
+
+        <button type="submit" class="save btn btn-default">Guardar</button>
+    </form>
+{% endblock %}
