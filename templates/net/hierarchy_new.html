@@ -12,7 +12,7 @@
         {{ form.as_p }}
 
         {% if hierarchy_list %}
-            <h2>Adicionar Hieraquia</h2>
+            <h2>Adicionar Hierarquia</h2>
             <select name="father" multiple="multiple">
             {% for h in hierarchy_list %}
                 <option value="{{ h.pk }}">{{ h }}</option>

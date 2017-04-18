@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block header %}
     <div class="page-header">
         <a href="" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
@@ -7,52 +9,53 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Nova Hierarquia</h1>
+    <h2>Adicionar Conditional Probability Table</h2>
     <form method="POST" class="post-form">{% csrf_token %}
-        <h2>Adicionar Conditional Probability Table</h2>
-        <table class="table table-bordered">
-            <tr>
+        <table id="ctp-create-variables" class="table table-bordered">
+            <thead>
+                <tr class="head">
                 {% for key, value  in ctp_dic_data.items %}
                 <th class="tg-yw4l" colspan="5">P({{ key }} |  {% for key, value  in variable_dic_data.items %} {{ key }}, {% endfor %})</th>
             </tr>
-            <tr>
-
+                <tr  class="head">
                     {% for variables in value %}
-                        <td>{{ key }}: {{ variables }} </td>
+                        <th>{{ key }}: {{ variables }} </th>
                     {% endfor %}
-                {% endfor %}
-                {% for key, value  in variable_dic_data.items %}
-                    <td>{{ key }} </td>
-                {% endfor %}
-            </tr>
+                    {% endfor %}
+                    {% for key, value  in variable_dic_data.items %}
+                        <th>{{ key }} </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
             {% for i  in range %}
-                    <tr>
-                        {% for key, value  in ctp_dic_data.items %}
-                            {% for variables in value %}
-                                <td><input name="value" id="{{ variables.pk }}" type="text"></td>
+                <tr>
+                    {% for key, value  in ctp_dic_data.items %}
+                        {% for variables in value %}
+                            <td class="father"><input id="{{ variables.pk }}" class="inputCTP" type="text"></td>
 
-                            {% endfor %}
                         {% endfor %}
-                        {% for key, value  in variable_dic_data.items %}
-                            <td>
-                                <select id="id_variable_child" name="variable_child">
-                                    {{ key }}
-                                    {% for variable in value %}
-                                        <option value="{{ variable.pk }}">{{ variable.value }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                        {% endfor %}
-                    </tr>
-
+                    {% endfor %}
+                    {% for key, value  in variable_dic_data.items %}
+                        <td class="child">
+                            <select id="id_variable_child" name="variable_child">
+                                {{ key }}
+                                {% for variable in value %}
+                                    <option value="{{ variable.pk }}">{{ variable.value }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-
-
-            <tr>
-            </tr>
-
-            </table>
-
-        <button type="submit" class="save btn btn-default">Guardar</button>
+            </tbody>
+        </table>
+        <button id="save" type="button" class="save btn btn-default">Guardar</button>
     </form>
+{% endblock %}
+
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js/save_ctp.js' %}"></script>
+
 {% endblock %}

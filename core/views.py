@@ -125,28 +125,17 @@ def variable_new(request, competency_pk=None, baysianet_pk=None):
 def ctp_new(request, competency_pk=None, baysianet_pk=None):
     ctp_dic_data = {}
     variable_dic_data = {}
-    context = {}
-    list = []
-    listVariables = []
-    form = ConditionalProbabilityTableForm()
     number = 1
-    if request.method == "POST":
-        form = ConditionalProbabilityTableForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('net_detail', baysianet_pk)
-    else:
-        hierarchies = Hierarchy.objects.filter(baysianet=baysianet_pk, competency_father=competency_pk)
-        for hierarchy in hierarchies:
-            ctp_dic_data.update({hierarchy.competency_father: hierarchy.competency_father.variable.all()})
-            variable_dic_data.update({hierarchy.competency_child: hierarchy.competency_child.variable.all()})
-            number = number * hierarchy.competency_child.variable.all().count()
 
-    return render(request, 'net/ctp_new.html', {'form': form,
-                                                'ctp_dic_data': ctp_dic_data,
+    hierarchies = Hierarchy.objects.filter(baysianet=baysianet_pk, competency_father=competency_pk)
+    for hierarchy in hierarchies:
+        ctp_dic_data.update({hierarchy.competency_father: hierarchy.competency_father.variable.all()})
+        variable_dic_data.update({hierarchy.competency_child: hierarchy.competency_child.variable.all()})
+        number = number * hierarchy.competency_child.variable.all().count()
+
+    return render(request, 'net/ctp_new.html', {'ctp_dic_data': ctp_dic_data,
                                                 'variable_dic_data': variable_dic_data,
-                                                'range': range(number),
-                                                'listVariables': listVariables})
+                                                'range': range(number)})
 
 
 def register(request):
