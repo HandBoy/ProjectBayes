@@ -126,16 +126,19 @@ def ctp_new(request, competency_pk=None, baysianet_pk=None):
     ctp_dic_data = {}
     variable_dic_data = {}
     number = 1
-
+    baysianet = get_object_or_404(BaysianNet, pk=baysianet_pk)
     hierarchies = Hierarchy.objects.filter(baysianet=baysianet_pk, competency_father=competency_pk)
+    form = ConditionalProbabilityTableForm()
     for hierarchy in hierarchies:
         ctp_dic_data.update({hierarchy.competency_father: hierarchy.competency_father.variable.all()})
         variable_dic_data.update({hierarchy.competency_child: hierarchy.competency_child.variable.all()})
         number = number * hierarchy.competency_child.variable.all().count()
 
-    return render(request, 'net/ctp_new.html', {'ctp_dic_data': ctp_dic_data,
+    return render(request, 'net/ctp_new.html', {'form': form,
+                                                'ctp_dic_data': ctp_dic_data,
                                                 'variable_dic_data': variable_dic_data,
-                                                'range': range(number)})
+                                                'range': range(number),
+                                                'baysianet': baysianet})
 
 
 def register(request):
