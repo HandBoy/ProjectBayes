@@ -18,7 +18,7 @@
         <div class="post">
             {% for key, value  in rede.items %}
                 <h3>
-                    {{ key.title}}
+                    {{ key.title}} <a href="{% url 'ctp_new' key.pk baysianet.pk %} " data-toggle="tooltip" title="Add Tabela Condiconal"><span class="glyphicon glyphicon-plus"></span></a>
                 </h3>
                     {% for hiera in value %}
                         {{ hiera.competency_child }}
@@ -34,7 +34,7 @@
                     <a href="{% url 'variable_new' competencia.pk baysianet.pk %} " data-toggle="tooltip" title="Add Variable"><span class="glyphicon glyphicon-plus"></span></a>
                     {{ competencia.title }} </h4>
                     {% for var in competencia.variable.all %}
-                            <p>{{ var.title }} {{ var.value }}% </p>
+                            {{ var.title }} {{ var.value }} |
                         {% endfor %}
                     {% for competency in competencia.competencs.all %}
                         <p>{{ competency.title }}</p>
