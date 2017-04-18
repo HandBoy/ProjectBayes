@@ -18,12 +18,13 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from core import views
 from rest_framework import routers
-from api.views import BaysianNetViewSet, LogSessionViewSet, GameSessionViewSet
+from api.views import BaysianNetViewSet, LogSessionViewSet, GameSessionViewSet, ConditionalProbabilityViewSet
 
 router = routers.DefaultRouter()
 router.register(r'nets', BaysianNetViewSet)
 router.register(r'logs', LogSessionViewSet)
 router.register(r'session', GameSessionViewSet)
+router.register(r'ctp', ConditionalProbabilityViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

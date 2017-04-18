@@ -1,8 +1,10 @@
 from django.http.response import Http404
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
-from core.models import BaysianNet, LogSession, GameSession, TablePoints, CompetenceUser
-from .serializers import BaysianNetSerializer, LogSessionSerializer, GameSessionSerializer
+from core.models import BaysianNet, LogSession, GameSession, \
+    TablePoints, CompetenceUser, ConditionalProbabilityTable
+from .serializers import BaysianNetSerializer, LogSessionSerializer, \
+    GameSessionSerializer, ConditionalProbabilitySerializer
 
 # Create your views here.
 
@@ -86,3 +88,8 @@ class LogSessionViewSet(viewsets.ModelViewSet):
 class GameSessionViewSet(viewsets.ModelViewSet):
     queryset = GameSession.objects.all()
     serializer_class = GameSessionSerializer
+
+
+class ConditionalProbabilityViewSet(viewsets.ModelViewSet):
+    queryset = ConditionalProbabilityTable.objects.all()
+    serializer_class = ConditionalProbabilitySerializer
