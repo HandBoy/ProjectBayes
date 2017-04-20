@@ -45,6 +45,7 @@ class Hierarchy(models.Model):
 
 class ConditionalProbabilityTable(models.Model):
     baysianet = models.ForeignKey('BaysianNet')
+    competency_father = models.ForeignKey(Competence, related_name='cpt_father')
     variable_father = models.ForeignKey(Variable, related_name='father')
     variable_child = models.ForeignKey(Variable, related_name='child')
     value = models.CharField(max_length=200, verbose_name='Valor', help_text='Valor da variável', blank=True)
