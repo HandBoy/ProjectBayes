@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^baysianet/hierarchy/new/(?P<baysianet_pk>[0-9]+)$', views.hierarchy_new, name='hierarchy_new'),
     url(r'^competence/variable/new/(?P<competency_pk>[0-9]+)/(?P<baysianet_pk>[0-9]+)$', views.variable_new, name='variable_new'),
     url(r'^baysianet/cpt/new/(?P<competency_pk>[0-9]+)/(?P<baysianet_pk>[0-9]+)$', views.ctp_new, name='ctp_new'),
+    url(r'^baysianet/cpt/detail/(?P<competency_pk>[0-9]+)/(?P<baysianet_pk>[0-9]+)$', views.ctp_detail, name='ctp_detail'),
     url(r'^competence/(?P<pk>[0-9]+)/$', views.competence_detail),
     url(r'^api/', include(router.urls)),
     url('^accounts/', include('django.contrib.auth.urls')),

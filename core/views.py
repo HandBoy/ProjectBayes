@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext
 
-from core.models import BaysianNet, Competence, LogSession, Game, GameSession, CompetenceUser, Hierarchy
+from core.models import BaysianNet, Competence, LogSession, Game, GameSession, CompetenceUser, Hierarchy, ConditionalProbabilityTable
 from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm, HierarchyForm, \
     ConditionalProbabilityTableForm
 from django.contrib.auth.decorators import login_required
@@ -138,7 +138,17 @@ def ctp_new(request, competency_pk=None, baysianet_pk=None):
                                                 'ctp_dic_data': ctp_dic_data,
                                                 'variable_dic_data': variable_dic_data,
                                                 'range': range(number),
-                                                'baysianet': baysianet})
+                                                'baysianet': baysianet,
+                                                'competency_father': competency_pk})
+
+
+def ctp_detail(request, competency_pk=None, baysianet_pk=None):
+    context = {}
+    baysianet = get_object_or_404(BaysianNet, pk=baysianet_pk)
+    competency_father = ConditionalProbabilityTable.objects.filter(competency_father=competency_pk)
+    context = {'baysianet': baysianet}
+    return render(request, 'net/ctp_detail.html', {'baysianet': baysianet_pk,
+                                                   'competency_father': competency_pk})
 
 
 def register(request):

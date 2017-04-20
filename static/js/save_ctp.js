@@ -12,6 +12,7 @@ $(document).ready(function(){
                 var valueChild = $(this).children('#id_variable_child').val();
                 $.each(tdFather, function() {
                     var id = $('#net').text();
+                    var competency_father = $('#competency_father').text();
                     var value = $(this).children('.inputCTP').val();
                     var father = $(this).children('input')[0].id;
                     //console.log('father: ' + father + " child: " + valueChild + " value: " + value);
@@ -20,6 +21,7 @@ $(document).ready(function(){
                         csrfmiddlewaretoken: csrf_token,
                         "value": value,
                         "baysianet": id,
+                        "competency_father": competency_father,
                         "variable_father": father,
                         "variable_child": valueChild
                     };
