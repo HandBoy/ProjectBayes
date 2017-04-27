@@ -10,6 +10,7 @@ $(document).ready(function(){
             var tdChild = $(this).children('.child');
             $.each(tdChild, function() {
                 var valueChild = $(this).children('#id_variable_child').val();
+                var line = $(this).children('.line').text();
                 $.each(tdFather, function() {
                     var id = $('#net').text();
                     var competency_father = $('#competency_father').text();
@@ -23,8 +24,10 @@ $(document).ready(function(){
                         "baysianet": id,
                         "competency_father": competency_father,
                         "variable_father": father,
-                        "variable_child": valueChild
+                        "variable_child": valueChild,
+                        "line": line
                     };
+
                     $.ajax({
                        type: "POST",
                        url: "/api/ctp/",
@@ -34,7 +37,7 @@ $(document).ready(function(){
                        },
                        data: sendInfo
                    });
-                }, valueChild );
+                }, valueChild, line );
             });
         });
     });

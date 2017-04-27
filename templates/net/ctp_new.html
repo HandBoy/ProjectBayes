@@ -32,18 +32,19 @@
                 <tr>
                     {% for key, value  in ctp_dic_data.items %}
                         {% for variables in value %}
-                            <td class="father"><input id="{{ variables.pk }}" class="inputCTP" type="text"></td>
+                            <td class="father">{{ variables.pk }}<input id="{{ variables.pk }}" class="inputCTP" type="text"></td>
 
                         {% endfor %}
                     {% endfor %}
                     {% for key, value  in variable_dic_data.items %}
                         <td class="child">
                             <select id="id_variable_child" name="variable_child">
-                                {{ key }}
+                                {{ key }}{{ key.pk }}
                                 {% for variable in value %}
-                                    <option value="{{ variable.pk }}">{{ variable.value }}</option>
+                                    <option value="{{ variable.pk }}">{{ variable.pk }} {{ variable.value }}</option>
                                 {% endfor %}
                             </select>
+                            <span class="line">{{ i }}</span>
                         </td>
                     {% endfor %}
                 </tr>

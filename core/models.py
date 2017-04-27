@@ -27,7 +27,7 @@ class Competence(models.Model):
 class Variable(models.Model):
     title = models.CharField(max_length=200, verbose_name='Título')
     value = models.CharField(max_length=200, verbose_name='Valor', help_text='Valor da variável', blank=True)
-    competence = models.ForeignKey('Competence', related_name='variable')
+    competence = models.ForeignKey(Competence, related_name='variable')
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -49,6 +49,7 @@ class ConditionalProbabilityTable(models.Model):
     variable_father = models.ForeignKey(Variable, related_name='father')
     variable_child = models.ForeignKey(Variable, related_name='child')
     value = models.CharField(max_length=200, verbose_name='Valor', help_text='Valor da variável', blank=True)
+    line = models.IntegerField(verbose_name='Linha', null=True, blank=True)
 
     def __str__(self):
         return self.variable_father.competence.title

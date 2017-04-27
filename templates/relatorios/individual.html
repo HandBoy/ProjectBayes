@@ -19,14 +19,14 @@
     <div class="row">
         <h3><span class="glyphicon glyphicon-user"></span> Aluno: {{ userRelatorio }}  Jogo: {{ game.title }}</h3>
 
-            <div class="col-md-5">
+            <div class="col-md-8">
                 <h4>Atingido</h4>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
                         <th>Competência</th>
-                        <th>Valor</th>
-                        <th>Nível</th>
+                        <th>Total</th>
+                        <th>Variável</th>
                     </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -36,24 +36,15 @@
                             <td>{{ key }}</td>
                             <td>{{ value.total|floatformat }}%</td>
                             <td>
-                                {% if value.total >= 90  %}
-                                    High
-                                {% elif value.total <= 40 %}
-                                    Low
-                                {% else %}
-                                    Medium
-                                {% endif %}
+                                {% for key, value in value.variable.items %}
+                                    <p>{{ key }}: {{ value|floatformat }}%</p>
+                                {% endfor %}
                             </td>
-
                         </tr>
-
                     {% endfor %}
-
                     </tbody>
-
                 </table>
             </div>
-
     </div>
 
     <div class="row">
@@ -135,7 +126,7 @@
     <p>Alunos</p>
     <ul class="list-group">
         {% for key, value in user_dic_data.items %}
-            <li class="list-group-item"><a href="{% url 'baysianet_detail' pk=value.id %}">{{ key }}</a></li>
+            <li class="list-group-item"><a href="{% url 'net_detail' pk=value.id %}">{{ key }}</a></li>
         {% endfor %}
         <li class="list-group-item">Dapibus ac facilisis in</li>
         <li class="list-group-item">Morbi leo risus</li>

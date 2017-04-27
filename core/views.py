@@ -2,11 +2,15 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.template import RequestContext
 
-from core.models import BaysianNet, Competence, LogSession, Game, GameSession, CompetenceUser, Hierarchy, ConditionalProbabilityTable
+from core.models import BaysianNet, Competence, LogSession, Game, GameSession, CompetenceUser, Hierarchy, \
+    ConditionalProbabilityTable, Variable
 from core.forms import BaysianForm, CompetenceForm, VariableForm, RegistrationForm, HierarchyForm, \
     ConditionalProbabilityTableForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from itertools import product
+from django.db.models import Count
+from django.db.models import Q
 
 import itertools
 
@@ -191,6 +195,7 @@ def relatorios(request, game_pk=None):
         if total_correct != 0:
             user_dic_data[user.username] = {'accept': total_correct, 'wrong': total_wrongs, 'id': user.id}
 
+    print(user_dic_data)
     wrong_dic_data = {}
     logs = LogSession.objects.filter(game_id=game_pk).filter(type_log=4)
     for wrongs in logs:
@@ -217,17 +222,30 @@ def relatorio_individual(request, user_pk=None, game_pk=None):
     game_session = GameSession.objects.filter(game_id=game_pk).filter(user_id=user_pk)
     game = Game.objects.get(pk=game_pk)
 
-    #
+    #Calculating percent for each competences of a game
     competences = Competence.objects.filter(game=game_pk)
+    user_ctp_table_dic = {}
     for comp in competences:
+        variable_dic = {}
         acerto = LogSession.objects.filter(user_id=user_pk).filter(competency=comp).filter(type_log=3).count()
         erro = LogSession.objects.filter(user_id=user_pk).filter(competency=comp).filter(type_log=4).count()
         total = acerto * 100 / (acerto + erro)
         competence_dic_data[comp.title] = {'name': comp.title}
-        competence_dic_data[comp.title] = {'acerto': acerto}
-        competence_dic_data[comp.title] = {'erro': erro}
-        competence_dic_data[comp.title] = {'total': total}
+        user_ctp_table_dic[comp.pk] = {'name': comp.title}
+        variable = Variable.objects.filter(competence=comp)
+        for var in variable:
+            if var.title == "Alta":
+                variable_dic.update({var.title: total})
+            elif var.title == "Baixa":
+                total_erro = erro * 100 / (acerto + erro)
+                variable_dic.update({var.title: total_erro})
+            else:
+                variable_dic.update({var.title: 0})
+        user_ctp_table_dic[comp.pk].update({'variable': variable_dic})
+        competence_dic_data[comp.title].update({'variable': variable_dic})
+        competence_dic_data[comp.title].update({'total': total})
 
+    # Calculating percent for each logsession of a game
     for session in game_session:
         logs = LogSession.objects.filter(session=session.id)
         for log in logs:
@@ -243,7 +261,78 @@ def relatorio_individual(request, user_pk=None, game_pk=None):
         game_session_dic_data[session.id] = {'game_session': session, 'accept': total_correct, 'wrong': total_wrongs,
                                              'id': user.id, 'percent_finish': session.percent_finish}
 
+    # Calculate ctp father
+    variables = {}
+    var_child = list()
+    lista = list()
+    hierarquias_father = Hierarchy.objects.filter(competency_father_id=8).distinct('competency_father')
+    for hierarq in hierarquias_father:
+        hierarq_child = Hierarchy.objects.filter(competency_father_id=hierarq.competency_father_id)
+        variable_father = Variable.objects.filter(competence=hierarq.competency_father_id)
+        #variables.update({hierarq.competency_father: variable_father})
+
+        for compe in hierarq_child:
+            variable_child = Variable.objects.filter(competence=compe.competency_child_id)
+            variables.update({compe.competency_child: variable_child})
+            var_child.append(variable_child)
+
+
+    lista = list(product(*variables.values()))
+
+
+
+    for father in variable_father:
+        for variables in lista:
+            my_filter = list()
+            palavra = ""
+            query = Q()
+            for var in variables:
+                palavra += str(var.id) + " " + var.title + " "
+                query |= Q(variable_child_id=var.id)
+                #my_filter.append({'variable_child_id': var.id})
+
+
+            ctps = ConditionalProbabilityTable.objects.filter(variable_father_id=father.pk)\
+                  .filter(query)\
+                  .values('line').annotate(Count('line')).order_by().filter(line__count__gt=1)
+
+            print("Pai: {} {} Filho: {} Value: {}".format(father.id, father, palavra, ctps))
+
+        #     for var in variables:
+        #         query += var.title + " "
+        #     print("Pai: {} Filho: {}".format(father, query))
+        # query = ''
+        #print("Pai: {} Filho: {}".format(father, query))
+
+    #
+
+
+
+    # SELECT * from core_conditionalprobabilitytable
+    # WHERE variable_father_id = 19 AND (variable_child_id = 13 OR variable_child_id = 16) AND line in (
+    #     SELECT line FROM core_conditionalprobabilitytable
+    #     WHERE variable_father_id = 19 AND (variable_child_id = 13 OR variable_child_id = 16)
+    #     group by line having count(*) > 1
+    # )
+    # ctps = ConditionalProbabilityTable.objects.filter(variable_father_id=19)\
+    #     .filter(Q(variable_child_id=13) | Q(variable_child_id=16))\
+    #     .values('line').annotate(Count('line')).order_by().filter(line__count__gt=1)
+    #
+    # for ctp in ctps:
+    #     print(ctp)
+        #print("{} {} {} ".format(ctp.variable_father, ctp.variable_child, ctp.value))
+
+    #for variables in lista:
+        #calcCTP(variables)
+        #for var in variables:
+            #print("{} {} {} ".format(var.pk,var.competence.title, var.title))
+    #print(list[1].variable)
+    #for father in hierarq.
+
+    #print(hierarquias_father)
     user_dic_data[user.username] = {'accept': total_correct, 'wrong': total_wrongs, 'id': user.id}
+    #print(user_ctp_table_dic)
+    #save informacion in context
     context['game_session_dic_data'] = game_session_dic_data
     context['wrong_dic_data'] = wrong_dic_data
     context['user_dic_data'] = user_dic_data
@@ -252,6 +341,8 @@ def relatorio_individual(request, user_pk=None, game_pk=None):
     context['userRelatorio'] = user
     return render(request, 'relatorios/individual.html', context)
 
+def calcCTP(variable):
+    print(variable)
 
 def simulator(request, session_pk=None):
     context = {}
